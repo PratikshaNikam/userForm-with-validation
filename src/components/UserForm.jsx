@@ -4,10 +4,11 @@ import { toast } from 'react-toastify';
 import './UserForm.css';
 import Select from 'react-select';
 import formFields from '../config/formFields';
-import skillOptions from '../config/skillOptions';
+import skillOptions from '../config/skillOptions';  // Make sure this import is correct
 import initialState from '../config/initialState';
 import axios from 'axios';
 import validateField from '../utils/validation';
+import InputField from './InputField';  // Import InputField component
 
 const UserForm = () => {
   const { users, addUser, editIndex, updateUser } = useContext(UserContext);
@@ -19,6 +20,7 @@ const UserForm = () => {
   const [selectedCountry, setSelectedCountry] = useState('');
   const [selectedState, setSelectedState] = useState('');
 
+
   useEffect(() => {
     if (editIndex !== null && users[editIndex]) {
       setFormData(users[editIndex]);
@@ -26,6 +28,7 @@ const UserForm = () => {
       setFormData(initialState); // Reset form if no user selected
     }
   }, [editIndex, users]);
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -46,7 +49,6 @@ const UserForm = () => {
 
     const error = validateField(name, value);
     setErrors(prev => ({ ...prev, [name]: error }));
-    console.log("data changed");
   };
 
   const handleSkillChange = (selectedOptions) => {
@@ -136,141 +138,68 @@ const UserForm = () => {
     }
   }, [selectedState, selectedCountry]);
 
-  console.log(formData);
-
   return (
     <form className="form" onSubmit={handleSubmit}>
       {formFields.map(({ name, type, placeholder }) => {
         switch (type) {
-          case 'multiSelect':
-            return (
-              <div key={name} className="form-group">
-                <label htmlFor={name}>{placeholder}</label>
-                <Select
-                  id={name}
-                  name={name}
-                  isMulti
-                  options={skillOptions}
-                  value={formData.skills.map(skill => ({ value: skill, label: skill }))}
-                  onChange={handleSkillChange}
-                  className="multi-select"
-                  placeholder="Select Skills"
-                />
-                {errors.skills && <span className="error">{errors.skills}</span>}
-              </div>
-            );
           case 'select':
             return (
-              <div key={name} className="form-group">
-                <label htmlFor={name}>{placeholder}</label>
-                <select
-                  id={name}
-                  name={name}
-                  value={formData[name] || ""}
-                  onChange={handleChange}
-                  className={errors[name] ? 'invalid' : ''}
-                >
-                  <option value="">Select {placeholder}</option>
-                  {(name === 'country' ? country : name === 'state' ? states : name === 'city' ? cities : []).map((opt) => (
-                    <option key={opt.iso2 || opt.value} value={opt.iso2 || opt.value}>
-                      {opt.name || opt.label}
-                    </option>
-                  ))}
-                </select>
-                {errors[name] && <span className="error">{errors[name]}</span>}
-              </div>
+              <InputField
+                key={name}
+                type="select"
+                name={name}
+                placeholder={placeholder}
+                value={formData[name]}
+                onChange={handleChange}
+                error={errors[name]}
+                options={name === 'country' ? country : name === 'state' ? states : name === 'city' ? cities : []}
+              />
             );
-
-          case 'textarea':
-            return (
-              <div key={name} className="form-group">
-                <textarea
-                  name={name}
-                  placeholder={placeholder}
-                  value={formData[name] || ""}
-                  onChange={handleChange}
-                />
-                {errors[name] && <span className="error">{errors[name]}</span>}
-              </div>
-            );
-
           case 'radio':
-            const options = ['Male', 'Female', 'Other'];
+            const genderOptions = ['Male', 'Female', 'Other'];
             return (
-              <div key={name} className="form-group">
-                <label>Gender:</label>
-                <div className="radio-group">
-                  {options.map(gender => (
-                    <label key={gender}>
-                      <input
-                        type="radio"
-                        name="gender"
-                        value={gender}
-                        checked={formData.gender === gender}
-                        onChange={handleChange}
-                      /> {gender}
-                    </label>
-                  ))}
-                </div>
-                {errors[name] && <span className="error">{errors[name]}</span>}
-              </div>
+              <InputField
+                key={name}
+                type="radio"
+                name={name}
+                placeholder="Gender"
+                value={formData[name]}
+                onChange={handleChange}
+                error={errors[name]}
+                options={genderOptions}
+              />
             );
-
-          case 'checkbox':
-            return (
-              <div key={name} className="form-group">
-                <label>
-                  <input
-                    type="checkbox"
-                    name={name}
-                    checked={formData[name] || false}
-                    onChange={handleChange}
-                  />
-                  {placeholder}
-                </label>
-                {errors[name] && <span className="error">{errors[name]}</span>}
-              </div>
-            );
-
           case 'skills':
             return (
-              <div key={name} className="form-group">
-                <label htmlFor={name}>{placeholder}</label>
-                <Select
-                  id={name}
-                  name={name}
-                  isMulti
-                  options={skillOptions}
-                  value={formData.skills.map(skill => ({ value: skill, label: skill }))}
-                  onChange={handleSkillChange}
-                  className="multi-select"
-                  placeholder="Select Skills"
-                />
-                {errors.skills && <span className="error">{errors.skills}</span>}
-              </div>
+              <InputField
+                key={name}
+                type="multi-select"
+                name={name}
+                placeholder={placeholder}
+                value={formData.skills || []}
+                onChange={handleSkillChange}
+                error={errors[name]}
+                options={skillOptions}  // Pass skill options here
+                isMulti={true}  // Ensure multi-select is enabled
+              />
             );
-
           default:
             return (
-              <div key={name} className="form-group">
-                <input
-                  type={type}
-                  name={name}
-                  placeholder={placeholder}
-                  value={formData[name] || ""}
-                  onChange={handleChange}
-                  className={errors[name] ? 'invalid' : ''}
-                />
-                {errors[name] && <span className="error">{errors[name]}</span>}
-              </div>
+              <InputField
+                key={name}
+                type={type}
+                name={name}
+                placeholder={placeholder}
+                value={formData[name]}
+                onChange={handleChange}
+                error={errors[name]}
+              />
             );
         }
       })}
-      
       <button type="submit" className="submit-button"
         disabled={!isFormValid()}
-        style={{ backgroundColor: !isFormValid() ? "#ccc" : "#007bff", cursor: !isFormValid() ? "not-allowed" : "pointer" }}
-      >
+        style={{ backgroundColor: !isFormValid() ? "#ccc" : "#007bff", cursor: !isFormValid() ? "not-allowed" : "pointer" }}>
         {editIndex !== null ? 'Update' : 'Submit'}
       </button>
     </form>
