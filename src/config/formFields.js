@@ -15,7 +15,7 @@ const formFields = [
   { name: "dob", type: "date", placeholder: "Date of Birth" },
   { name: "bio", type: "textarea", placeholder: "Short Bio" },
   {name:"jobTitle", type:"text", placeholder:"Enter job title"},
-  {name:"skills", type:"select", placeholder:"Select Skills"},
+  {name:"skills", type:"multiSelect", placeholder:"Select Skills"},
   {name:"gender", type:"radio", placeholder:"Select gender"},
   {name:"country", type:"select", placeholder:"Select Country"},
   {name:"state", type:"select", placeholder:"Select State"},

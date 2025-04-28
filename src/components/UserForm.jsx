@@ -19,7 +19,6 @@ const UserForm = () => {
   const [selectedCountry, setSelectedCountry] = useState('');
   const [selectedState, setSelectedState] = useState('');
 
-
   useEffect(() => {
     if (editIndex !== null && users[editIndex]) {
       setFormData(users[editIndex]);
@@ -27,10 +26,6 @@ const UserForm = () => {
       setFormData(initialState); // Reset form if no user selected
     }
   }, [editIndex, users]);
-  
-
-  
-  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -51,7 +46,6 @@ const UserForm = () => {
 
     const error = validateField(name, value);
     setErrors(prev => ({ ...prev, [name]: error }));
-  
     console.log("data changed");
   };
 
@@ -60,8 +54,6 @@ const UserForm = () => {
     setFormData(prev => ({ ...prev, skills }));
     validateField('skills', skills);
   };
-
-  
 
   const isFormValid = () => {
     const hasErrors = Object.values(errors).some(err => err);
@@ -144,119 +136,142 @@ const UserForm = () => {
     }
   }, [selectedState, selectedCountry]);
 
-  console.log(formData)
+  console.log(formData);
 
   return (
     <form className="form" onSubmit={handleSubmit}>
       {formFields.map(({ name, type, placeholder }) => {
-        if (name === 'skills') {
-          return (
-            <div key={name} className="form-group">
-              <label htmlFor={name}>{placeholder}</label>
-              <Select
-                id={name}
-                name={name}
-                isMulti
-                options={skillOptions}
-                value={formData.skills.map(skill => ({ value: skill, label: skill }))}
-                onChange={handleSkillChange}
-                className="multi-select"
-                placeholder="Select Skills"
-              />
-              {errors.skills && <span className="error">{errors.skills}</span>}
-            </div>
-          );
-        } else if (type === 'select') {
-          return (
-            <div key={name} className="form-group">
-              <label htmlFor={name}>{placeholder}</label>
-              <select
-                id={name}
-                name={name}
-                value={formData[name] || ""}
-                onChange={handleChange}
-                className={errors[name] ? 'invalid' : ''}
-              >
-                <option value="">Select {placeholder}</option>
-                {(name === 'country' ? country : name === 'state' ? states : name === 'city' ? cities : options || []).map((opt) => (
-                  <option key={opt.iso2 || opt.value} value={opt.iso2 || opt.value}>
-                    {opt.name || opt.label}
-                  </option>
-                ))}
-              </select>
-              {errors[name] && <span className="error">{errors[name]}</span>}
-            </div>
-          );
-        } 
-        else if (type === 'radio') {
-         const options=['Male', 'Female', 'Other']
-          return (
-            <div key={name} className="form-group">
-              <label>Gender:</label>
-        <div className="radio-group">
-          {options.map(gender => (
-            <label key={gender}>
-              <input
-                type="radio"
-                name="gender"
-                value={gender}
-                checked={formData.gender === gender}
-                onChange={handleChange}
-              /> {gender}
-            </label>
-                ))}
-              </div>
-              {errors[name] && <span className="error">{errors[name]}</span>}
-            </div>
-          );
-        }
-        else if (type === 'textarea') {
-          return (
-            <div key={name} className="form-group">
-              <textarea
-                name={name}
-                placeholder={placeholder}
-                value={formData[name] || ""}
-                onChange={handleChange}
-              />
-            </div>
-          );
-        } else if (type === 'checkbox') {
-          return (
-            <div key={name} className="form-group">
-              <label>
-                <input
-                  type="checkbox"
+        switch (type) {
+          case 'multiSelect':
+            return (
+              <div key={name} className="form-group">
+                <label htmlFor={name}>{placeholder}</label>
+                <Select
+                  id={name}
                   name={name}
-                  checked={formData[name] || false}
+                  isMulti
+                  options={skillOptions}
+                  value={formData.skills.map(skill => ({ value: skill, label: skill }))}
+                  onChange={handleSkillChange}
+                  className="multi-select"
+                  placeholder="Select Skills"
+                />
+                {errors.skills && <span className="error">{errors.skills}</span>}
+              </div>
+            );
+          case 'select':
+            return (
+              <div key={name} className="form-group">
+                <label htmlFor={name}>{placeholder}</label>
+                <select
+                  id={name}
+                  name={name}
+                  value={formData[name] || ""}
+                  onChange={handleChange}
+                  className={errors[name] ? 'invalid' : ''}
+                >
+                  <option value="">Select {placeholder}</option>
+                  {(name === 'country' ? country : name === 'state' ? states : name === 'city' ? cities : []).map((opt) => (
+                    <option key={opt.iso2 || opt.value} value={opt.iso2 || opt.value}>
+                      {opt.name || opt.label}
+                    </option>
+                  ))}
+                </select>
+                {errors[name] && <span className="error">{errors[name]}</span>}
+              </div>
+            );
+
+          case 'textarea':
+            return (
+              <div key={name} className="form-group">
+                <textarea
+                  name={name}
+                  placeholder={placeholder}
+                  value={formData[name] || ""}
                   onChange={handleChange}
                 />
-                {placeholder}
-              </label>
-            </div>
-          );
-        } else {
-          return (
-            <div key={name} className="form-group">
-              <input
-                type={type}
-                name={name}
-                placeholder={placeholder}
-                value={formData[name] || ""}
-                onChange={handleChange}
-                className={errors[name] ? 'invalid' : ''}
-              />
-              {errors[name] && <span className="error">{errors[name]}</span>}
-            </div>
-          );
+                {errors[name] && <span className="error">{errors[name]}</span>}
+              </div>
+            );
+
+          case 'radio':
+            const options = ['Male', 'Female', 'Other'];
+            return (
+              <div key={name} className="form-group">
+                <label>Gender:</label>
+                <div className="radio-group">
+                  {options.map(gender => (
+                    <label key={gender}>
+                      <input
+                        type="radio"
+                        name="gender"
+                        value={gender}
+                        checked={formData.gender === gender}
+                        onChange={handleChange}
+                      /> {gender}
+                    </label>
+                  ))}
+                </div>
+                {errors[name] && <span className="error">{errors[name]}</span>}
+              </div>
+            );
+
+          case 'checkbox':
+            return (
+              <div key={name} className="form-group">
+                <label>
+                  <input
+                    type="checkbox"
+                    name={name}
+                    checked={formData[name] || false}
+                    onChange={handleChange}
+                  />
+                  {placeholder}
+                </label>
+                {errors[name] && <span className="error">{errors[name]}</span>}
+              </div>
+            );
+
+          case 'skills':
+            return (
+              <div key={name} className="form-group">
+                <label htmlFor={name}>{placeholder}</label>
+                <Select
+                  id={name}
+                  name={name}
+                  isMulti
+                  options={skillOptions}
+                  value={formData.skills.map(skill => ({ value: skill, label: skill }))}
+                  onChange={handleSkillChange}
+                  className="multi-select"
+                  placeholder="Select Skills"
+                />
+                {errors.skills && <span className="error">{errors.skills}</span>}
+              </div>
+            );
+
+          default:
+            return (
+              <div key={name} className="form-group">
+                <input
+                  type={type}
+                  name={name}
+                  placeholder={placeholder}
+                  value={formData[name] || ""}
+                  onChange={handleChange}
+                  className={errors[name] ? 'invalid' : ''}
+                />
+                {errors[name] && <span className="error">{errors[name]}</span>}
+              </div>
+            );
         }
       })}
       
       <button type="submit" className="submit-button"
-      disabled={!isFormValid()}
-      style={{ backgroundColor: !isFormValid() ? "#ccc" : "#007bff", cursor: !isFormValid() ? "not-allowed" : "pointer" }}
+        disabled={!isFormValid()}
+        style={{ backgroundColor: !isFormValid() ? "#ccc" : "#007bff", cursor: !isFormValid() ? "not-allowed" : "pointer" }}
       >
-       {editIndex !== null ? 'Update' : 'Submit'}
+        {editIndex !== null ? 'Update' : 'Submit'}
       </button>
     </form>
   );
