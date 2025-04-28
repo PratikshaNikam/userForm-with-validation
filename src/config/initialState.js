@@ -1,0 +1,20 @@
+const initialState = {
+  fullName: '',
+  dob: '',
+  gender: '',
+  email: '',
+  phone: '',
+  alternateEmail: '',
+  emergencyContact: '',
+  address: '',
+  city: '',
+  state: '',
+  zip: '',
+  country: '',
+  jobTitle: '',
+  company: '',
+  experience: '',
+  skills: [],
+  bio: '',
+};
+export default initialState;
