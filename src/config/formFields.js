@@ -1,8 +1,4 @@
 const formFields = [
-  // checkbox: true, options:{
-  //   [
-  //   ]
-  // }
   { name: "fullName", type: "text", placeholder: "Full Name" },
   { name: "email", type: "email", placeholder: "Email" },
   { name: "alternateEmail", type: "email", placeholder: "Alternate Email" },
@@ -14,15 +10,12 @@ const formFields = [
   { name: "zip", type: "text", placeholder: "Zip Code" },
   { name: "dob", type: "date", placeholder: "Date of Birth" },
   { name: "bio", type: "textarea", placeholder: "Short Bio" },
-  {name:"jobTitle", type:"text", placeholder:"Enter job title"},
+  {name:"jobTitle", type:"select", placeholder:"Enter job title"},
   {name:"skills", type:"skills", placeholder:"Select Skills"},
-  {name:"gender", type:"radio", placeholder:"Select gender"}, //radio
+  {name:"gender", type:"radio", placeholder:"Select gender"}, 
   {name:"country", type:"select", placeholder:"Select Country"},
   {name:"state", type:"select", placeholder:"Select State"},
   {name:"city", type:"select", placeholder:"Select City"},
-
-
-  
 ];
 
 export default formFields;

@@ -17,10 +17,6 @@ export const UserProvider = ({ children }) => {
     setUsers(updatedUsers);
   };
 
-  // const deleteUser = (index) => {
-  //   setUsers((prevUsers) => prevUsers.filter((_, i) => i !== index));
-  // };
-
   const deleteUser = (index) => {
     setUsers(prev => prev.filter((_, i) => i !== index));
     setEditIndex(null);  // Reset edit mode

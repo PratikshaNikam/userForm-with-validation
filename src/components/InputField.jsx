@@ -14,12 +14,12 @@ const InputField = ({ type, name, value, onChange, error, placeholder, options, 
             onChange={onChange}
             className={error ? 'invalid' : ''}
           >
-            <option value="">Select {placeholder}</option>
-            {options.map(opt => (
-              <option key={opt.iso2 || opt.value} value={opt.iso2 || opt.value}>
+            <option value=""> {placeholder}</option>
+              {options.map((opt, index) => (
+                <option key={opt.iso2 || opt.value || index} value={opt.iso2 || opt.value}>
                 {opt.name || opt.label}
-              </option>
-            ))}
+            </option>
+        ))}
           </select>
           {error && <span className="error">{error}</span>}
         </div>

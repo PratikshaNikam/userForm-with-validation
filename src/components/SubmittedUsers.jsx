@@ -3,6 +3,7 @@ import React, { useContext } from 'react';
 import { UserContext } from '../context/UserContext';
 import { toast } from 'react-toastify';
 import './UserForm.css';
+import './SubmittedUsers.css';
 
 const SubmittedUsers = () => {
   const { users, deleteUser, setEditIndex } = useContext(UserContext);

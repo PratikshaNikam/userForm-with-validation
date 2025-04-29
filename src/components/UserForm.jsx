@@ -2,13 +2,13 @@ import React, { useContext, useState, useEffect } from 'react';
 import { UserContext } from '../context/UserContext';
 import { toast } from 'react-toastify';
 import './UserForm.css';
-import Select from 'react-select';
+import jobTitles from '../config/jobTitles';
 import formFields from '../config/formFields';
-import skillOptions from '../config/skillOptions';  // Make sure this import is correct
+import skillOptions from '../config/skillOptions'; 
 import initialState from '../config/initialState';
 import axios from 'axios';
 import validateField from '../utils/validation';
-import InputField from './InputField';  // Import InputField component
+import InputField from './InputField';  
 
 const UserForm = () => {
   const { users, addUser, editIndex, updateUser } = useContext(UserContext);
@@ -19,13 +19,14 @@ const UserForm = () => {
   const [cities, setCities] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState('');
   const [selectedState, setSelectedState] = useState('');
+  const genderOptions = ['Male', 'Female', 'Other'];
 
 
   useEffect(() => {
     if (editIndex !== null && users[editIndex]) {
       setFormData(users[editIndex]);
     } else {
-      setFormData(initialState); // Reset form if no user selected
+      setFormData(initialState); 
     }
   }, [editIndex, users]);
   
@@ -33,8 +34,7 @@ const UserForm = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-
-    // Special case for country and state selection
+    
     if (name === 'country') {
       setSelectedCountry(value);
       setFormData(prev => ({ ...prev, state: '', city: '' }));
@@ -137,12 +137,15 @@ const UserForm = () => {
       fetchCities();
     }
   }, [selectedState, selectedCountry]);
-
+ 
   return (
     <form className="form" onSubmit={handleSubmit}>
       {formFields.map(({ name, type, placeholder }) => {
         switch (type) {
           case 'select':
+            const selectOptions =
+              name === 'country'? country : name === 'state' ? states : name === 'city' ? cities : 
+              name === 'jobTitle'? jobTitles : [];
             return (
               <InputField
                 key={name}
@@ -152,11 +155,10 @@ const UserForm = () => {
                 value={formData[name]}
                 onChange={handleChange}
                 error={errors[name]}
-                options={name === 'country' ? country : name === 'state' ? states : name === 'city' ? cities : []}
+                options={selectOptions}
               />
             );
           case 'radio':
-            const genderOptions = ['Male', 'Female', 'Other'];
             return (
               <InputField
                 key={name}
@@ -179,7 +181,7 @@ const UserForm = () => {
                 value={formData.skills || []}
                 onChange={handleSkillChange}
                 error={errors[name]}
-                options={skillOptions}  // Pass skill options here
+                options={ skillOptions }  // Pass skill options here
                 isMulti={true}  // Ensure multi-select is enabled
               />
             );
