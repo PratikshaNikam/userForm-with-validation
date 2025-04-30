@@ -6,22 +6,21 @@ import jobTitles from '../../config/jobTitles';
 import formFields from '../../config/formFields';
 import skillOptions from '../../config/skillOptions'; 
 import initialState from '../../config/initialState';
-import axios from 'axios';
 import validateField from '../../utils/validation';
 import InputField from '../SharedComponent/InputField';  
 import CountryStateCity from '../Hooks/UseCountryStateCity';
+import { useNavigate } from 'react-router-dom';
 
 const UserForm = () => {
-  const { users, addUser, editIndex, updateUser } = useContext(UserContext);
+  const { users, addUser, editIndex, updateUser,setIsFormVisible } = useContext(UserContext);
   const [formData, setFormData] = useState(initialState);
   const [errors, setErrors] = useState({});
-  // const [country, setCountry] = useState([]);
-  // const [states, setStates] = useState([]);
-  // const [cities, setCities] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState('');
   const [selectedState, setSelectedState] = useState('');
   const { countries, states, cities } = CountryStateCity(selectedCountry, selectedState);
   const genderOptions = ['Male', 'Female', 'Other'];
+  const navigate = useNavigate();
+
 
 
   useEffect(() => {
@@ -76,6 +75,7 @@ const UserForm = () => {
     if (editIndex !== null) {
       updateUser(editIndex, formData);
       toast.success('User updated successfully');
+      navigate('/');
     } else {
       addUser(formData);
       toast.success('User added successfully');
@@ -84,61 +84,11 @@ const UserForm = () => {
     setFormData(initialState);
     setSelectedCountry('');
     setSelectedState('');
-    // setCities([]);
-    // setStates([]);
     setErrors({});
+    setIsFormVisible(false)
+    
   };
-
-  // const fetchCountries = async () => {
-  //   try {
-  //     const res = await axios.get('https://api.countrystatecity.in/v1/countries', {
-  //       headers: { 'X-CSCAPI-KEY': 'cWJydkoxOHBOV0ZwaHFPZ1U4T013WjBOWExlR2k2aVhwSkFWcXJ4Vg==' }
-  //     });
-  //     setCountry(res.data);
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
-
-  // const fetchStates = async () => {
-  //   try {
-  //     const res = await axios.get(`https://api.countrystatecity.in/v1/countries/${selectedCountry}/states`, {
-  //       headers: { 'X-CSCAPI-KEY': 'cWJydkoxOHBOV0ZwaHFPZ1U4T013WjBOWExlR2k2aVhwSkFWcXJ4Vg==' }
-  //     });
-  //     setStates(res.data);
-  //     setCities([]);
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
-
-  // Fetch country, states, cities
-  // useEffect(() => {
-  //   fetchCountries();
-  // }, []);
   
-  // useEffect(() => {
-  //   fetchStates();
-  // }, [selectedCountry]);
-
-  // useEffect(() => {
-  //   if (selectedCountry && selectedState) {
-  //     const fetchCities = async () => {
-  //       try {
-  //         const res = await axios.get(`https://api.countrystatecity.in/v1/countries/${selectedCountry}/states/${selectedState}/cities`, {
-  //           headers: { 'X-CSCAPI-KEY': 'cWJydkoxOHBOV0ZwaHFPZ1U4T013WjBOWExlR2k2aVhwSkFWcXJ4Vg==' }
-  //         });
-  //         setCities(res.data);
-  //       } catch (err) {
-  //         console.error(err);
-  //       }
-  //     };
-  //     fetchCities();
-  //   }
-  // }, [selectedState, selectedCountry]);
-
-  
- 
   return (
     <form className="form" onSubmit={handleSubmit}>
       {formFields.map(({ name, type, placeholder }) => {

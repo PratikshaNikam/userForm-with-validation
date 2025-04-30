@@ -7,12 +7,14 @@ import SubmittedUsers from './components/SubmittedUsers/SubmittedUsers';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
+import Home from './Pages/Home';
+import EditUser from './Pages/EditUser';
  
 const App = () => {
   return (
     <UserProvider>
       <ToastContainer position="top-right" autoClose={3000} />
-      <div className="container">
+      {/* <div className="container">
         <div className="form-section">
           <h2>User Information Form</h2>
           <UserForm />
@@ -21,7 +23,14 @@ const App = () => {
           <h2>Submitted Users</h2>
           <SubmittedUsers />
         </div>
-      </div>
+      </div> */}
+
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/edit-user/:id" element={<EditUser />} />
+        </Routes>
+      </Router>
     </UserProvider>
   );
 };
