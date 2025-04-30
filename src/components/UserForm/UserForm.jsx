@@ -12,7 +12,7 @@ import CountryStateCity from '../Hooks/UseCountryStateCity';
 import { useNavigate } from 'react-router-dom';
 
 const UserForm = () => {
-  const { users, addUser, editIndex, updateUser,setIsFormVisible } = useContext(UserContext);
+  const { users, addUser, editIndex, updateUser, } = useContext(UserContext);
   const [formData, setFormData] = useState(initialState);
   const [errors, setErrors] = useState({});
   const [selectedCountry, setSelectedCountry] = useState('');
@@ -80,13 +80,10 @@ const UserForm = () => {
       addUser(formData);
       toast.success('User added successfully');
     }
-
     setFormData(initialState);
     setSelectedCountry('');
     setSelectedState('');
     setErrors({});
-    setIsFormVisible(false)
-    
   };
   
   return (

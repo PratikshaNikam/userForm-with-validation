@@ -6,30 +6,7 @@ body {
   background-color: #f0f2f5;
 }
 
-.container {
-  display: flex;
-  flex-direction: row;
-  padding: 20px;
-  gap: 60px;
-}
 
-.form-section  {
-  display: flex;
-  flex-direction: column;
-  background-color: #ffffff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.data-section{
-  display: flex;
-  flex-direction: column;
-  background-color: #ffffff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
 h2{
   text-align: center;
 }

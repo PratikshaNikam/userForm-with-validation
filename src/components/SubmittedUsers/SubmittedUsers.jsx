@@ -6,15 +6,13 @@ import { toast } from 'react-toastify';
 import './SubmittedUsers.css';
 
 const SubmittedUsers = () => {
-  const { users, deleteUser, setEditIndex, setIsFormVisible } = useContext(UserContext);
+  const { users, deleteUser, setEditIndex, } = useContext(UserContext);
   const navigate = useNavigate();
 
   const handleEdit = (index) => {
     setEditIndex(index);  // Set the edit index for editing
     toast.info("Editing user");
     navigate(`/edit-user/${index}`);
-    setIsFormVisible(true);
-
   };
 
   const handleDelete = (index) => {

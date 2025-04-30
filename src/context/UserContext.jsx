@@ -6,7 +6,7 @@ export const UserContext = createContext();
 export const UserProvider = ({ children }) => {
   const [users, setUsers] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
-  const [isFormVisible, setIsFormVisible] = useState(true);
+  
 
   const addUser = (user) => {
     setUsers((prev) => [...prev, user]);
@@ -31,8 +31,7 @@ export const UserProvider = ({ children }) => {
         editIndex,
         setEditIndex,
         updateUser,
-        isFormVisible,
-        setIsFormVisible }}>
+       }}>
       {children}
     </UserContext.Provider>
   );

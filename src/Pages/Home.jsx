@@ -10,18 +10,18 @@ const Home = () => {
   return (
     <>
       <div className="container">
-        {isFormVisible ? (
+        
           <div className="form-section">
             <h2>User Information Form</h2>
             <UserForm />
           </div>
-        ) : (
+      
           <div className="data-section">
             <h2>Submitted Users</h2>
             <SubmittedUsers />
           </div>
 
-        )}
+        
       </div>
     </>
   );
