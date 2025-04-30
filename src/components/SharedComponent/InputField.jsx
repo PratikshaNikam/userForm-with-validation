@@ -1,5 +1,6 @@
 import React from 'react';
 import Select from 'react-select';
+import "./InputField.css"
 
 const InputField = ({ type, name, value, onChange, error, placeholder, options, isMulti }) => {
   switch (type) {

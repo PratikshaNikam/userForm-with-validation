@@ -1,0 +1,88 @@
+.form {
+    max-width: 600px;
+    margin: auto;
+    background: #f9f9f9;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+    
+  .submit-btn {
+    background-color: #45a049;
+    color: white;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    width: 100%;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .submit-btn:hover {
+    background-color: #45a060;
+  }
+  
+  
+ 
+  
+  .form-group input,
+  .form-group select {
+    padding: 0.6rem 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    margin-top: 0.3rem;
+  }
+  
+  
+  
+  
+ 
+  
+  
+
+  
+
+  
+
+  
+  
+  
+/* .autocomplete-container {
+    position: relative;
+    width: 100%;
+  }
+  
+  .autocomplete-container input {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+  }
+  
+  .autocomplete-suggestions {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-top: none;
+    background-color: white;
+    z-index: 999;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  
+  .autocomplete-suggestions li {
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  .autocomplete-suggestions li:hover {
+    background-color: #f0f0f0;
+  } */
+  
+
+

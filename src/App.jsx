@@ -2,12 +2,12 @@
 import React from 'react';
 import './App.css';
 import { UserProvider } from './context/UserContext';
-import UserForm from './components/UserForm';
-
-import SubmittedUsers from './components/SubmittedUsers';
+import UserForm from './components/UserForm/UserForm';
+import SubmittedUsers from './components/SubmittedUsers/SubmittedUsers';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
+ 
 const App = () => {
   return (
     <UserProvider>

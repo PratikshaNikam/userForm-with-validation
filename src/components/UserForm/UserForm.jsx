@@ -1,24 +1,26 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { UserContext } from '../context/UserContext';
+import { UserContext } from '../../context/UserContext';
 import { toast } from 'react-toastify';
 import './UserForm.css';
-import jobTitles from '../config/jobTitles';
-import formFields from '../config/formFields';
-import skillOptions from '../config/skillOptions'; 
-import initialState from '../config/initialState';
+import jobTitles from '../../config/jobTitles';
+import formFields from '../../config/formFields';
+import skillOptions from '../../config/skillOptions'; 
+import initialState from '../../config/initialState';
 import axios from 'axios';
-import validateField from '../utils/validation';
-import InputField from './InputField';  
+import validateField from '../../utils/validation';
+import InputField from '../SharedComponent/InputField';  
+import CountryStateCity from '../Hooks/UseCountryStateCity';
 
 const UserForm = () => {
   const { users, addUser, editIndex, updateUser } = useContext(UserContext);
   const [formData, setFormData] = useState(initialState);
   const [errors, setErrors] = useState({});
-  const [country, setCountry] = useState([]);
-  const [states, setStates] = useState([]);
-  const [cities, setCities] = useState([]);
+  // const [country, setCountry] = useState([]);
+  // const [states, setStates] = useState([]);
+  // const [cities, setCities] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState('');
   const [selectedState, setSelectedState] = useState('');
+  const { countries, states, cities } = CountryStateCity(selectedCountry, selectedState);
   const genderOptions = ['Male', 'Female', 'Other'];
 
 
@@ -37,14 +39,11 @@ const UserForm = () => {
     
     if (name === 'country') {
       setSelectedCountry(value);
-      setFormData(prev => ({ ...prev, state: '', city: '' }));
-      setStates([]);
-      setCities([]);
+      setFormData(prev => ({ ...prev, country: value, state: '', city: '' }));
     }
     if (name === 'state') {
       setSelectedState(value);
-      setFormData(prev => ({ ...prev, city: '' }));
-      setCities([]);
+      setFormData(prev => ({ ...prev, state: value, city: '' }));
     }
 
     const error = validateField(name, value);
@@ -85,58 +84,60 @@ const UserForm = () => {
     setFormData(initialState);
     setSelectedCountry('');
     setSelectedState('');
-    setCities([]);
-    setStates([]);
+    // setCities([]);
+    // setStates([]);
     setErrors({});
   };
 
+  // const fetchCountries = async () => {
+  //   try {
+  //     const res = await axios.get('https://api.countrystatecity.in/v1/countries', {
+  //       headers: { 'X-CSCAPI-KEY': 'cWJydkoxOHBOV0ZwaHFPZ1U4T013WjBOWExlR2k2aVhwSkFWcXJ4Vg==' }
+  //     });
+  //     setCountry(res.data);
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
+
+  // const fetchStates = async () => {
+  //   try {
+  //     const res = await axios.get(`https://api.countrystatecity.in/v1/countries/${selectedCountry}/states`, {
+  //       headers: { 'X-CSCAPI-KEY': 'cWJydkoxOHBOV0ZwaHFPZ1U4T013WjBOWExlR2k2aVhwSkFWcXJ4Vg==' }
+  //     });
+  //     setStates(res.data);
+  //     setCities([]);
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
+
   // Fetch country, states, cities
-  useEffect(() => {
-    const fetchCountries = async () => {
-      try {
-        const res = await axios.get('https://api.countrystatecity.in/v1/countries', {
-          headers: { 'X-CSCAPI-KEY': 'cWJydkoxOHBOV0ZwaHFPZ1U4T013WjBOWExlR2k2aVhwSkFWcXJ4Vg==' }
-        });
-        setCountry(res.data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    fetchCountries();
-  }, []);
+  // useEffect(() => {
+  //   fetchCountries();
+  // }, []);
+  
+  // useEffect(() => {
+  //   fetchStates();
+  // }, [selectedCountry]);
 
-  useEffect(() => {
-    if (selectedCountry) {
-      const fetchStates = async () => {
-        try {
-          const res = await axios.get(`https://api.countrystatecity.in/v1/countries/${selectedCountry}/states`, {
-            headers: { 'X-CSCAPI-KEY': 'cWJydkoxOHBOV0ZwaHFPZ1U4T013WjBOWExlR2k2aVhwSkFWcXJ4Vg==' }
-          });
-          setStates(res.data);
-          setCities([]);
-        } catch (err) {
-          console.error(err);
-        }
-      };
-      fetchStates();
-    }
-  }, [selectedCountry]);
+  // useEffect(() => {
+  //   if (selectedCountry && selectedState) {
+  //     const fetchCities = async () => {
+  //       try {
+  //         const res = await axios.get(`https://api.countrystatecity.in/v1/countries/${selectedCountry}/states/${selectedState}/cities`, {
+  //           headers: { 'X-CSCAPI-KEY': 'cWJydkoxOHBOV0ZwaHFPZ1U4T013WjBOWExlR2k2aVhwSkFWcXJ4Vg==' }
+  //         });
+  //         setCities(res.data);
+  //       } catch (err) {
+  //         console.error(err);
+  //       }
+  //     };
+  //     fetchCities();
+  //   }
+  // }, [selectedState, selectedCountry]);
 
-  useEffect(() => {
-    if (selectedCountry && selectedState) {
-      const fetchCities = async () => {
-        try {
-          const res = await axios.get(`https://api.countrystatecity.in/v1/countries/${selectedCountry}/states/${selectedState}/cities`, {
-            headers: { 'X-CSCAPI-KEY': 'cWJydkoxOHBOV0ZwaHFPZ1U4T013WjBOWExlR2k2aVhwSkFWcXJ4Vg==' }
-          });
-          setCities(res.data);
-        } catch (err) {
-          console.error(err);
-        }
-      };
-      fetchCities();
-    }
-  }, [selectedState, selectedCountry]);
+  
  
   return (
     <form className="form" onSubmit={handleSubmit}>
@@ -144,7 +145,7 @@ const UserForm = () => {
         switch (type) {
           case 'select':
             const selectOptions =
-              name === 'country'? country : name === 'state' ? states : name === 'city' ? cities : 
+              name === 'country'? countries : name === 'state' ? states : name === 'city' ? cities : 
               name === 'jobTitle'? jobTitles : [];
             return (
               <InputField
@@ -199,9 +200,9 @@ const UserForm = () => {
             );
         }
       })}
-      <button type="submit" className="submit-button"
+      <button type="submit" className="submit-btn"
         disabled={!isFormValid()}
-        style={{ backgroundColor: !isFormValid() ? "#ccc" : "#007bff", cursor: !isFormValid() ? "not-allowed" : "pointer" }}>
+        style={{ backgroundColor: !isFormValid() ? "#ccc" : "#45a049", cursor: !isFormValid() ? "not-allowed" : "pointer" }}>
         {editIndex !== null ? 'Update' : 'Submit'}
       </button>
     </form>
