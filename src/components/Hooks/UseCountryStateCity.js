@@ -24,7 +24,7 @@ const UseCountryStateCity = (selectedCountryCode = '', selectedStateCode = '') =
   }, []);
 
   useEffect(() => {
-    if (!selectedCountryCode) return;
+    //if (!selectedCountryCode) return;
 
     const fetchStates = async () => {
       try {
@@ -44,7 +44,7 @@ const UseCountryStateCity = (selectedCountryCode = '', selectedStateCode = '') =
   }, [selectedCountryCode]);
 
   useEffect(() => {
-    if (!selectedCountryCode || !selectedStateCode) return;
+    //if (!selectedCountryCode || !selectedStateCode) return;
 
     const fetchCities = async () => {
       try {
