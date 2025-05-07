@@ -1,7 +1,6 @@
 import React,{useContext} from 'react';
 import UserForm from '../components/UserForm/UserForm';
 import SubmittedUsers from '../components/SubmittedUsers/SubmittedUsers';
-import { UserContext } from '../context/UserContext';
 import "./Home.css";
 
 

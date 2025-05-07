@@ -1,5 +1,4 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { UserContext } from '../../context/UserContext';
 import { toast } from 'react-toastify';
 import './UserForm.css';
 import jobTitles from '../../config/jobTitles';
@@ -79,6 +78,7 @@ const UserForm = () => {
     if (editIndex !== null) {
       //updateUser(editIndex, formData);
       dispatch(updateUser({ index: editIndex, updatedUser: formData }));
+      dispatch(clearEditIndex());
       toast.success('User updated successfully');
       navigate('/');
     } else {

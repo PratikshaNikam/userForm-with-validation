@@ -1,15 +1,17 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useContext } from 'react';
-import { UserContext } from '../context/UserContext';
 import UserForm from '../components/UserForm/UserForm';
+import { setEditIndex } from '../redux/features/userSlice';
+import { useDispatch } from 'react-redux';
 
 const EditUser = () => {
   const { id } = useParams();
-  const { setEditIndex } = useContext(UserContext);
+  const dispatch = useDispatch();
+  
 
   useEffect(() => {
-    setEditIndex(Number(id));
-  }, [id]);
+    dispatch(setEditIndex(Number(id)));
+  }, [id,dispatch]);
 
   return <UserForm/>;
 };

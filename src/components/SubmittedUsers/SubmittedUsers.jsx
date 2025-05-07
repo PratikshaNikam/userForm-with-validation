@@ -8,7 +8,7 @@ import { deleteUser, setEditIndex } from '../../redux/features/userSlice';
 
 const SubmittedUsers = () => {
   //const { users, deleteUser, setEditIndex, } = useContext(UserContext);
-  const { users, editIndex } = useSelector(state => state.user);
+  const { users} = useSelector(state => state.user);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
