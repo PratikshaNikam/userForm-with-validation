@@ -29,6 +29,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/edit-user/:id" element={<EditUser />} />
+          
         </Routes>
       </Router>
     </UserProvider>

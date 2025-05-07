@@ -6,8 +6,8 @@ import "./Home.css";
 
 
 const Home = () => {
-  const { isFormVisible } = useContext(UserContext);
-  console.log(isFormVisible)
+  //const { isFormVisible } = useContext(UserContext);
+ // console.log(isFormVisible)
   return (
     <>
       <div className="container">

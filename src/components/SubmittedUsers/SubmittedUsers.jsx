@@ -1,16 +1,21 @@
-// components/SubmittedUsers.js
 import React, { useContext } from 'react';
-import { UserContext } from '../../context/UserContext';
+//import { UserContext } from '../../context/UserContext';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import './SubmittedUsers.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteUser, setEditIndex } from '../../redux/features/userSlice';
 
 const SubmittedUsers = () => {
-  const { users, deleteUser, setEditIndex, } = useContext(UserContext);
+  //const { users, deleteUser, setEditIndex, } = useContext(UserContext);
+  const { users, editIndex } = useSelector(state => state.user);
+
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleEdit = (index) => {
-    setEditIndex(index);  // Set the edit index for editing
+    //setEditIndex(index);  // Set the edit index for editing
+    dispatch(setEditIndex(index));
     toast.info("Editing user");
     navigate(`/edit-user/${index}`);
   };
@@ -19,7 +24,8 @@ const SubmittedUsers = () => {
     // Confirm before deleting
     const confirmDelete = window.confirm("Are you sure you want to delete this user?");
     if (confirmDelete) {
-      deleteUser(index);  // Call deleteUser to remove user from the list
+      //deleteUser(index);  
+      dispatch(deleteUser(index));
       toast.success("User deleted successfully");
     }
   };

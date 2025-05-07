@@ -10,19 +10,23 @@ import validateField from '../../utils/validation';
 import InputField from '../SharedComponent/InputField';  
 import CountryStateCity from '../Hooks/UseCountryStateCity';
 import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { addUser, updateUser, clearEditIndex } from '../../redux/features/userSlice';
 
 const UserForm = () => {
-  const { users, addUser, editIndex, updateUser, } = useContext(UserContext);
+  //const { users, addUser, editIndex, updateUser, } = useContext(UserContext);
   const [formData, setFormData] = useState(initialState);
   const [errors, setErrors] = useState({});
   const [selectedCountry, setSelectedCountry] = useState('');
   const [selectedState, setSelectedState] = useState('');
   const { countries, states, cities } = CountryStateCity(selectedCountry, selectedState);
+  //const { countries, states, cities } = UseCountryStateCity(selectedCountryCode, selectedStateCode);
+
   const genderOptions = ['Male', 'Female', 'Other'];
   const navigate = useNavigate();
-
-
-
+  const dispatch = useDispatch();
+  const { users, editIndex } = useSelector((state) => state.user);
+  
   useEffect(() => {
     if (editIndex !== null && users[editIndex]) {
       setFormData(users[editIndex]);
@@ -73,11 +77,13 @@ const UserForm = () => {
     }
 
     if (editIndex !== null) {
-      updateUser(editIndex, formData);
+      //updateUser(editIndex, formData);
+      dispatch(updateUser({ index: editIndex, updatedUser: formData }));
       toast.success('User updated successfully');
       navigate('/');
     } else {
-      addUser(formData);
+      //addUser(formData);
+      dispatch(addUser(formData));
       toast.success('User added successfully');
     }
     setFormData(initialState);
