@@ -1,4 +1,4 @@
-import React,{useContext} from 'react';
+import React from 'react';
 import UserForm from '../components/UserForm/UserForm';
 import SubmittedUsers from '../components/SubmittedUsers/SubmittedUsers';
 import "./Home.css";

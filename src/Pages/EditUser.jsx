@@ -1,19 +1,16 @@
 import { useParams } from 'react-router-dom';
-import { useEffect, useContext } from 'react';
+import { useSelector } from 'react-redux';
 import UserForm from '../components/UserForm/UserForm';
-import { setEditIndex } from '../redux/features/userSlice';
-import { useDispatch } from 'react-redux';
 
 const EditUser = () => {
   const { id } = useParams();
-  const dispatch = useDispatch();
-  
+  const { users } = useSelector((state) => state.user);
+  const userIndex = Number(id);
+  const initialData = users[userIndex];
 
-  useEffect(() => {
-    dispatch(setEditIndex(Number(id)));
-  }, [id,dispatch]);
+  if (!initialData) return <div>User not found</div>;
 
-  return <UserForm/>;
+  return <UserForm initialData={initialData} userIndex={userIndex} />;
 };
 
 export default EditUser;

@@ -1,5 +1,4 @@
-import React, { useContext } from 'react';
-//import { UserContext } from '../../context/UserContext';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import './SubmittedUsers.css';
@@ -7,18 +6,20 @@ import { useDispatch, useSelector } from 'react-redux';
 import { deleteUser, setEditIndex } from '../../redux/features/userSlice';
 
 const SubmittedUsers = () => {
-  //const { users, deleteUser, setEditIndex, } = useContext(UserContext);
-  const { users} = useSelector(state => state.user);
+
+  const { users } = useSelector(state => state.user);
+  console.log(users)
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+
   const handleEdit = (index) => {
-    //setEditIndex(index);  // Set the edit index for editing
-    dispatch(setEditIndex(index));
+    const userToEdit = users[index];
     toast.info("Editing user");
-    navigate(`/edit-user/${index}`);
+    navigate(`/edit-user/${index}`, { state: { user: userToEdit, index } });
   };
+
 
   const handleDelete = (index) => {
     // Confirm before deleting

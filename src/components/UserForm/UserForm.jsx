@@ -1,51 +1,44 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import './UserForm.css';
 import jobTitles from '../../config/jobTitles';
 import formFields from '../../config/formFields';
-import skillOptions from '../../config/skillOptions'; 
+import skillOptions from '../../config/skillOptions';
 import initialState from '../../config/initialState';
 import validateField from '../../utils/validation';
-import InputField from '../SharedComponent/InputField';  
-import CountryStateCity from '../Hooks/UseCountryStateCity';
+import InputField from '../SharedComponent/InputField';
+import UseCountryStateCity from '../Hooks/UseCountryStateCity';
 import { useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { addUser, updateUser, clearEditIndex } from '../../redux/features/userSlice';
+import { useDispatch } from 'react-redux';
+import { addUser, updateUser } from '../../redux/features/userSlice';
 
-const UserForm = () => {
-  //const { users, addUser, editIndex, updateUser, } = useContext(UserContext);
-  const [formData, setFormData] = useState(initialState);
+const UserForm = ({ initialData = initialState, userIndex = null }) => {
+  const [formData, setFormData] = useState(initialData);
   const [errors, setErrors] = useState({});
-  const [selectedCountry, setSelectedCountry] = useState('');
-  const [selectedState, setSelectedState] = useState('');
-  const { countries, states, cities } = CountryStateCity(selectedCountry, selectedState);
-  //const { countries, states, cities } = UseCountryStateCity(selectedCountryCode, selectedStateCode);
+  const [selectedCountry, setSelectedCountry] = useState(initialData.country || '');
+  const [selectedState, setSelectedState] = useState(initialData.state || '');
+  const { countries, states, cities } = UseCountryStateCity(selectedCountry, selectedState);
 
   const genderOptions = ['Male', 'Female', 'Other'];
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { users, editIndex } = useSelector((state) => state.user);
-  
+  //console.log(formData)
+
   useEffect(() => {
-    if (editIndex !== null && users[editIndex]) {
-      setFormData(users[editIndex]);
-    } else {
-      setFormData(initialState); 
-    }
-  }, [editIndex, users]);
-  
+    setFormData(initialData);
+  }, [initialData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    
+
     if (name === 'country') {
       setSelectedCountry(value);
-      setFormData(prev => ({ ...prev, country: value, state: '', city: '' }));
+      setFormData(prev => ({ ...prev, state: '', city: '' }));
     }
     if (name === 'state') {
       setSelectedState(value);
-      setFormData(prev => ({ ...prev, state: value, city: '' }));
+      setFormData(prev => ({ ...prev, city: '' }));
     }
 
     const error = validateField(name, value);
@@ -55,17 +48,18 @@ const UserForm = () => {
   const handleSkillChange = (selectedOptions) => {
     const skills = selectedOptions ? selectedOptions.map(opt => opt.value) : [];
     setFormData(prev => ({ ...prev, skills }));
-    validateField('skills', skills);
+    const error = validateField('skills', skills);
+    setErrors(prev => ({ ...prev, skills: error }));
   };
 
   const isFormValid = () => {
-    const hasErrors = Object.values(errors).some(err => err);
-    const hasEmptyFields = Object.values(formData).some(val => {
+    const hasErrors = Object.values(errors).some(Boolean);
+    const hasEmpty = Object.entries(formData).some(([key, val]) => {
       if (typeof val === 'string') return !val.trim();
       if (Array.isArray(val)) return val.length === 0;
       return !val;
     });
-    return !hasErrors && !hasEmptyFields;
+    return !hasErrors && !hasEmpty;
   };
 
   const handleSubmit = (e) => {
@@ -75,31 +69,27 @@ const UserForm = () => {
       return;
     }
 
-    if (editIndex !== null) {
-      //updateUser(editIndex, formData);
-      dispatch(updateUser({ index: editIndex, updatedUser: formData }));
-      dispatch(clearEditIndex());
+    if (userIndex !== null) {
+      dispatch(updateUser({ index: userIndex, updatedUser: formData }));
       toast.success('User updated successfully');
-      navigate('/');
     } else {
-      //addUser(formData);
       dispatch(addUser(formData));
       toast.success('User added successfully');
     }
-    setFormData(initialState);
-    setSelectedCountry('');
-    setSelectedState('');
-    setErrors({});
+
+    navigate('/');
   };
-  
+
   return (
     <form className="form" onSubmit={handleSubmit}>
       {formFields.map(({ name, type, placeholder }) => {
         switch (type) {
           case 'select':
             const selectOptions =
-              name === 'country'? countries : name === 'state' ? states : name === 'city' ? cities : 
-              name === 'jobTitle'? jobTitles : [];
+              name === 'country' ? countries :
+              name === 'state' ? states :
+              name === 'city' ? cities :
+              name === 'jobTitle' ? jobTitles : [];
             return (
               <InputField
                 key={name}
@@ -135,8 +125,8 @@ const UserForm = () => {
                 value={formData.skills || []}
                 onChange={handleSkillChange}
                 error={errors[name]}
-                options={ skillOptions }  // Pass skill options here
-                isMulti={true}  // Ensure multi-select is enabled
+                options={skillOptions}
+                isMulti
               />
             );
           default:
@@ -153,10 +143,16 @@ const UserForm = () => {
             );
         }
       })}
-      <button type="submit" className="submit-btn"
+      <button
+        type="submit"
+        className="submit-btn"
         disabled={!isFormValid()}
-        style={{ backgroundColor: !isFormValid() ? "#ccc" : "#45a049", cursor: !isFormValid() ? "not-allowed" : "pointer" }}>
-        {editIndex !== null ? 'Update' : 'Submit'}
+        style={{
+          backgroundColor: !isFormValid() ? "#ccc" : "#45a049",
+          cursor: !isFormValid() ? "not-allowed" : "pointer"
+        }}
+      >
+        {userIndex !== null ? 'Update' : 'Submit'}
       </button>
     </form>
   );

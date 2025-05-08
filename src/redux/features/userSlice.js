@@ -2,7 +2,7 @@ import {createSlice} from "@reduxjs/toolkit";
 
 const initialState={
     users:[],
-    editIndex:null
+    //editIndex:null
 };
 
 
@@ -16,17 +16,17 @@ const userSlice=createSlice({
         deleteUser: (state, action) => {
             state.users.splice(action.payload, 1);
         },
-        setEditIndex: (state, action) => {
-            state.editIndex = action.payload;
-        },
+        // setEditIndex: (state, action) => {
+        //     state.editIndex = action.payload;
+        // },
         updateUser: (state, action) => {
             const { index, updatedUser } = action.payload;
             state.users[index] = updatedUser;
             state.editIndex=null;
         },
-        clearEditIndex: (state) => {
-            state.editIndex = null;
-          }
+        // clearEditIndex: (state) => {
+        //     state.editIndex = null;
+        //   }
     }
 
 })

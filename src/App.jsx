@@ -1,9 +1,6 @@
 // App.js
 import React from 'react';
 import './App.css';
-//import { UserProvider } from './context/UserContext';
-import UserForm from './components/UserForm/UserForm';
-import SubmittedUsers from './components/SubmittedUsers/SubmittedUsers';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -14,12 +11,12 @@ const App = () => {
   return (
 
     <>
-      <ToastContainer position="top-right" autoClose={3000} />
+      <ToastContainer position="top-right" autoClose={2000} />
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/edit-user/:id" element={<EditUser />} />
-          </Routes>
+        </Routes>
       </Router>
 
     </>
