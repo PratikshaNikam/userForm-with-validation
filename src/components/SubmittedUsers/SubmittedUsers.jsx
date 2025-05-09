@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import './SubmittedUsers.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteUser, setEditIndex } from '../../redux/features/userSlice';
+import { deleteUser } from '../../redux/features/userSlice';
 
 const SubmittedUsers = () => {
 

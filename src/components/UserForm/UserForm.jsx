@@ -25,8 +25,15 @@ const UserForm = ({ initialData = initialState, userIndex = null }) => {
   //console.log(formData)
 
   useEffect(() => {
-    setFormData(initialData);
+    if (initialData) {
+      setFormData(initialData);
+      setSelectedCountry(initialData.country || '');
+      setSelectedState(initialData.state || '');
+    } else {
+      setFormData(initialState);
+    }
   }, [initialData]);
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -76,6 +83,12 @@ const UserForm = ({ initialData = initialState, userIndex = null }) => {
       dispatch(addUser(formData));
       toast.success('User added successfully');
     }
+
+    setFormData(initialState);
+    setSelectedCountry('');
+    setSelectedState('');
+    setErrors({});
+
 
     navigate('/');
   };
