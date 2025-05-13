@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import './SubmittedUsers.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteUser } from '../../redux/features/userSlice';
+import { DELETE_USER_REQUEST } from '../../redux/sagas/types';
 
 const SubmittedUsers = () => {
 
@@ -26,7 +26,7 @@ const SubmittedUsers = () => {
     const confirmDelete = window.confirm("Are you sure you want to delete this user?");
     if (confirmDelete) {
       //deleteUser(index);  
-      dispatch(deleteUser(index));
+      dispatch({ type: DELETE_USER_REQUEST, payload: id });
       toast.success("User deleted successfully");
     }
   };

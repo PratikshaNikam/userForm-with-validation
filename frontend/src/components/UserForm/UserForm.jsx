@@ -7,66 +7,69 @@ import skillOptions from '../../config/skillOptions';
 import initialState from '../../config/initialState';
 import validateField from '../../utils/validation';
 import InputField from '../SharedComponent/InputField';
-import UseCountryStateCity from '../Hooks/UseCountryStateCity';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { addUser, updateUser } from '../../redux/features/userSlice';
+import CountryStateCity from '../Hooks/UseCountryStateCity';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { ADD_USER_REQUEST, UPDATE_USER_REQUEST } from '../../redux/sagas/types';
 
-const UserForm = ({ initialData = initialState, userIndex = null }) => {
-  const [formData, setFormData] = useState(initialData);
+const UserForm = () => {
+  const [formData, setFormData] = useState(initialState);
   const [errors, setErrors] = useState({});
-  const [selectedCountry, setSelectedCountry] = useState(initialData.country || '');
-  const [selectedState, setSelectedState] = useState(initialData.state || '');
-  const { countries, states, cities } = UseCountryStateCity(selectedCountry, selectedState);
+  const [selectedCountry, setSelectedCountry] = useState('');
+  const [selectedState, setSelectedState] = useState('');
+  const { countries, states, cities } = CountryStateCity(selectedCountry, selectedState);
 
   const genderOptions = ['Male', 'Female', 'Other'];
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  //console.log(formData)
+  const { id } = useParams();
+  const users = useSelector((state) => state.user.users);
 
   useEffect(() => {
-    if (initialData) {
-      setFormData(initialData);
-      setSelectedCountry(initialData.country || '');
-      setSelectedState(initialData.state || '');
+    if (id) {
+      const userToEdit = users.find((user) => user.id === Number(id));
+      if (userToEdit) {
+        setFormData(userToEdit);
+        setSelectedCountry(userToEdit.country);
+        setSelectedState(userToEdit.state);
+      }
     } else {
       setFormData(initialState);
     }
-  }, [initialData]);
-  
+  }, [id, users]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
 
     if (name === 'country') {
       setSelectedCountry(value);
-      setFormData(prev => ({ ...prev, state: '', city: '' }));
+      setFormData((prev) => ({ ...prev, country: value, state: '', city: '' }));
     }
     if (name === 'state') {
       setSelectedState(value);
-      setFormData(prev => ({ ...prev, city: '' }));
+      setFormData((prev) => ({ ...prev, state: value, city: '' }));
     }
 
     const error = validateField(name, value);
-    setErrors(prev => ({ ...prev, [name]: error }));
+    setErrors((prev) => ({ ...prev, [name]: error }));
   };
 
   const handleSkillChange = (selectedOptions) => {
-    const skills = selectedOptions ? selectedOptions.map(opt => opt.value) : [];
-    setFormData(prev => ({ ...prev, skills }));
+    const skills = selectedOptions ? selectedOptions.map((opt) => opt.value) : [];
+    setFormData((prev) => ({ ...prev, skills }));
     const error = validateField('skills', skills);
-    setErrors(prev => ({ ...prev, skills: error }));
+    setErrors((prev) => ({ ...prev, skills: error }));
   };
 
   const isFormValid = () => {
-    const hasErrors = Object.values(errors).some(Boolean);
-    const hasEmpty = Object.entries(formData).some(([key, val]) => {
+    const hasErrors = Object.values(errors).some((err) => err);
+    const hasEmptyFields = Object.values(formData).some((val) => {
       if (typeof val === 'string') return !val.trim();
       if (Array.isArray(val)) return val.length === 0;
       return !val;
     });
-    return !hasErrors && !hasEmpty;
+    return !hasErrors && !hasEmptyFields;
   };
 
   const handleSubmit = (e) => {
@@ -76,11 +79,17 @@ const UserForm = ({ initialData = initialState, userIndex = null }) => {
       return;
     }
 
-    if (userIndex !== null) {
-      dispatch(updateUser({ index: userIndex, updatedUser: formData }));
+    if (id) {
+      dispatch({
+        type: UPDATE_USER_REQUEST,
+        payload: {
+          id: Number(id),
+          updatedData: formData,
+        },
+      });
       toast.success('User updated successfully');
     } else {
-      dispatch(addUser(formData));
+      dispatch({ type: ADD_USER_REQUEST, payload: formData });
       toast.success('User added successfully');
     }
 
@@ -88,8 +97,6 @@ const UserForm = ({ initialData = initialState, userIndex = null }) => {
     setSelectedCountry('');
     setSelectedState('');
     setErrors({});
-
-
     navigate('/');
   };
 
@@ -97,12 +104,17 @@ const UserForm = ({ initialData = initialState, userIndex = null }) => {
     <form className="form" onSubmit={handleSubmit}>
       {formFields.map(({ name, type, placeholder }) => {
         switch (type) {
-          case 'select':
+          case 'select': {
             const selectOptions =
-              name === 'country' ? countries :
-              name === 'state' ? states :
-              name === 'city' ? cities :
-              name === 'jobTitle' ? jobTitles : [];
+              name === 'country'
+                ? countries
+                : name === 'state'
+                ? states
+                : name === 'city'
+                ? cities
+                : name === 'jobTitle'
+                ? jobTitles
+                : [];
             return (
               <InputField
                 key={name}
@@ -115,6 +127,7 @@ const UserForm = ({ initialData = initialState, userIndex = null }) => {
                 options={selectOptions}
               />
             );
+          }
           case 'radio':
             return (
               <InputField
@@ -139,7 +152,7 @@ const UserForm = ({ initialData = initialState, userIndex = null }) => {
                 onChange={handleSkillChange}
                 error={errors[name]}
                 options={skillOptions}
-                isMulti
+                isMulti={true}
               />
             );
           default:
@@ -161,11 +174,11 @@ const UserForm = ({ initialData = initialState, userIndex = null }) => {
         className="submit-btn"
         disabled={!isFormValid()}
         style={{
-          backgroundColor: !isFormValid() ? "#ccc" : "#45a049",
-          cursor: !isFormValid() ? "not-allowed" : "pointer"
+          backgroundColor: !isFormValid() ? '#ccc' : '#45a049',
+          cursor: !isFormValid() ? 'not-allowed' : 'pointer',
         }}
       >
-        {userIndex !== null ? 'Update' : 'Submit'}
+        {id ? 'Update' : 'Submit'}
       </button>
     </form>
   );
